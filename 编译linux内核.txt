@@ -5,7 +5,7 @@ tar -xzvf linux-3.10.tar.gz
 cd linux-3.10
 make mrproper # 清除所有配置及编译残留
 cp /boot/config-3.10.0-327.el7.x86_64 .config # 使用当前机器的内核配置，make defconfig使用默认配置
-make -j `nproc`
+make -j
 
 step2：至此linux内核已经编译完成，产生的linux内核文件为arch/x86/boot/bzImage，以下是linux内核的安装部分：
 make modules_install # 内核模块安装

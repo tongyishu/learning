@@ -1,0 +1,130 @@
+lsof
+
+lsof /var/log/messages # 查看与/var/log/messages文件相关进程
+lsof +D /var/log # 对指定目录进行递归，查看相关进程
+lsof -p 1102 # 查看进程1102打开的所有文件
+lsof -i :22 # 查看22号端口相关的文件
+lsof -u syslog # 查看syslog用户打开的文件
+
+
+
+top
+# top
+top - 22:46:40 up 110 days, 3:22, 1 user, load average: 0.00, 0.02, 0.05
+Tasks: 174 total, 1 running, 173 sleeping, 0 stopped, 0 zombie
+%Cpu(s): 0.8 us, 1.2 sy, 0.0 ni, 97.9 id, 0.2 wa, 0.0 hi, 0.0 si, 0.0 st
+KiB Mem : 8008488 total, 3251412 free, 637536 used, 4119540 buff/cache
+KiB Swap: 4194300 total, 3907580 free, 286720 used. 6609648 avail Mem
+
+PID USER PR NI VIRT RES SHR S %CPU %MEM TIME+ COMMAND
+15046 root 20 0 830912 153396 3880 S 15.9 1.9 4025:25 spesservice
+8705 gdm 20 0 749032 35232 2844 S 0.7 0.4 580:27.07 gsd-color
+15641 root 20 0 1300276 40528 10528 S 0.3 0.5 91:22.47 messageservice
+
+Tasks 进程总数
+running 正在运行的进程数
+sleeping 睡眠的进程数
+stopped 停止的进程数
+zombie 僵尸进程数
+
+us 用户空间占用CPU百分比；
+sy 内核空间占用CPU百分比 ；
+ni 用户进程空间内改变过优先级的进程占用CPU百分比；
+id 空闲CPU百分比 ；
+wa 等待输入输出的CPU时间百分比；
+hi 硬件CPU中断占用百分比；
+si 软中断占用百分比；
+st 虚拟机占用百分比；
+
+PID 进程id
+PPID 父进程id
+RUSER Real user name
+UID 进程所有者的用户id
+USER 进程所有者的用户名
+GROUP 进程所有者的组名
+TTY 启动进程的终端名。不是从终端启动的进程则显示为?
+PR 优先级
+NI nice值。负值表示高优先级，正值表示低优先级
+P 最后使用的CPU，仅在多CPU环境下有意义
+%CPU 上次更新到现在的CPU时间占用百分比
+TIME 进程使用的CPU时间总计，单位秒
+TIME+ 进程使用的CPU时间总计，单位1/100秒
+%MEM 进程使用的物理内存百分比
+VIRT 进程使用的虚拟内存总量，单位kb。VIRT=SWAP+RES
+SWAP 进程使用的虚拟内存中，被换出的大小，单位kb。
+RES 进程使用的、未被换出的物理内存大小，单位kb。RES=CODE+DATA
+CODE 可执行代码占用的物理内存大小，单位kb
+DATA 可执行代码以外的部分(数据段+栈)占用的物理内存大小，单位kb
+SHR 共享内存大小，单位kb
+nFLT 页面错误次数
+nDRT 最后一次写入到现在，被修改过的页面数。
+S 进程状态(D=不可中断的睡眠状态,R=运行,S=睡眠,T=跟踪/停止,Z=僵尸进程)
+COMMAND 命令名/命令行
+
+free
+# free -h
+total used free shared buffers cached
+Mem: 62G 61G 1.3G 3.2G 1.7G 52G
+-/+ buffers/cache: 7.2G 55G
+Swap: 0B 0B 0B
+
+total 总计物理内存的大小。
+used 已使用的物理内存大小。
+free 可用的物理内存大小。
+Shared 多个进程共享的内存总额。
+Buffers/cached 缓存大小。
+(-buffers/cache) used内存数：指的第一部分Mem行中的used – buffers – cached
+(+buffers/cache) free内存数：指的第一部分Mem行中的free + buffers + cached
+可见-buffers/cache反映的是被程序实实在在吃掉的内存,而+buffers/cache反映的是可以挪用的内存总数。
+
+iostat
+# iostat
+Linux 3.10.0-957.el7.x86_64 (centos) 12/14/2021 _x86_64_ (4 CPU)
+
+avg-cpu: %user %nice %system %iowait %steal %idle
+0.60 0.00 0.48 0.10 0.00 98.82
+
+Device: tps kB_read/s kB_wrtn/s kB_read kB_wrtn
+vda 1.37 3.17 49.49 30123529 470964348
+vdb 0.69 4.62 58.03 43943089 552258412
+
+%user 在用户级别运行所使用的CPU的百分比。
+%nice nice操作所使用的CPU的百分比。
+%sys 在系统级别(kernel)运行所使用CPU的百分比。
+%iowait CPU等待硬件I/O时，所占用CPU百分比。
+%idle CPU空闲时间的百分比。
+
+tps 每秒钟发送到的I/O请求数。
+kB_read /s 每秒读取的block数。
+kB _wrtn/s 每秒写入的block数。
+kB _read 读入的block总数。
+kB _wrtn 写入的block总数。
+
+strace
+strace监控用户空间进程和内核的交互，比如系统调用、信号传递、进程状态变更等。
+# strace -tt -f -e trace=open -p 22121
+Process 22121 attached with 13 threads
+[pid 22145] 17:57:45.558768 open("/proc/21856/status", O_RDONLY) = 2174
+[pid 22121] 17:57:46.056771 open("/sys/class/infiniband/mlx5_0/ports/1/hw_counters/out_of_buffer", O_RDONLY) = 2174
+[pid 22145] 17:57:46.558786 open("/proc/21856/status", O_RDONLY) = 2174
+
+-f 跟踪由fork调用所产生的子进程
+-tt 在输出中的每一行前加上时间信息,微秒级
+-p 指定进程号
+-T 显示每个系统调用所消耗的时间
+-x 以十六进制形式输出非标准字符串
+-e 控制如何跟踪
+-e trace=file 只跟踪文件操作的系统调用
+-e trace=process 只跟踪进程控制的系统调用
+-e trace=network 只跟踪网络相关的系统调用
+-e trace=signal 只跟踪信号相关的系统调用
+-e trace=open,close,read,write 只跟踪指定的系统调用（这里为open,close,read,write）
+
+uptime
+# uptime
+15:00:58 up 8 days, 5:49, 3 users, load average: 0.03, 0.08, 0.03
+
+15:00:58 : 当前时间
+up 8 days, 5:49 : 系统运行了 8 天 5 小时 49 分
+3 user : 当前有 3 个用户(session)登录了系统
+load average: 0.03, 0.08, 0.03 : 系统在过去 1 分钟内，5 分钟内，15 分钟内的平均负载

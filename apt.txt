@@ -1,0 +1,16 @@
+apt update               # 更新所有软件包的数据库（缓存）信息
+apt upgrade              # 升级软件包
+apt autoremove           # 清理不再使用的依赖和库文件
+apt update mplayer       # 更新mplayer
+apt install mplayer      # 安装mplayer软件包
+apt remove mplayer       # 卸载mplayer软件包
+apt purge mplayer        # 移除mplayer软件包及配置文件
+apt search mplayer       # 查找mplayer软件包
+apt show mplayer         # 查看mplayer软件包的具体信息
+apt list --installed     # 列出所有已经安装的软件包
+apt list --upgradeable   # 列出所有可更新的软件包及版本信息
+
+update和upgrade的区别？
+操作系统围绕着一个所有可用包的数据库（缓存）工作。这个数据库（缓存）并不包含这些包本身，仅仅包含这些包的元数据（版本、仓库、依赖等）。
+update更新的是数据库。
+upgrade下载软件包并升级版本。

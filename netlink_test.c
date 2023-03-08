@@ -109,3 +109,31 @@ int main(void)
     close(fd);
     return 0;
 }
+
+
+/*
+宏NLMSG_ALIGN(len)用于得到不小于len且字节对齐的最小数值
+#define NLMSG_ALIGNTO 4U
+#define NLMSG_ALIGN(len) (((len)+NLMSG_ALIGNTO-1) & ~(NLMSG_ALIGNTO-1))
+
+宏NLMSG_HDRLEN用于计算nlmsghdr消息头的长度
+#define NLMSG_HDRLEN ((int) NLMSG_ALIGN(sizeof(struct nlmsghdr)))
+
+宏NLMSG_LENGTH(len)用于计算数据部分长度为len时实际的消息长度
+#define NLMSG_LENGTH(len) ((len) + NLMSG_HDRLEN)
+
+宏NLMSG_SPACE(len)返回不小于NLMSG_LENGTH(len)且字节对齐的最小数值
+#define NLMSG_SPACE(len) NLMSG_ALIGN(NLMSG_LENGTH(len))
+
+宏NLMSG_DATA(nlh)用于取得消息的数据部分的首地址
+#define NLMSG_DATA(nlh) ((void*)(((char*)nlh) + NLMSG_LENGTH(0)))
+
+宏NLMSG_NEXT(nlh,len)用于得到下一个消息的首地址，同时len也减少为剩余消息的总长度
+#define NLMSG_NEXT(nlh,len) ((len) -= NLMSG_ALIGN((nlh)->nlmsg_len), (struct nlmsghdr*)(((char*)(nlh)) + NLMSG_ALIGN((nlh)->nlmsg_len)))
+
+宏NLMSG_OK(nlh,len)用于判断消息是否有len这么长
+#define NLMSG_OK(nlh,len) ((len) >= (int)sizeof(struct nlmsghdr) && (nlh)->nlmsg_len >= sizeof(struct nlmsghdr) && (nlh)->nlmsg_len <= (len))
+
+宏NLMSG_PAYLOAD(nlh,len)用于返回payload的长度
+#define NLMSG_PAYLOAD(nlh,len) ((nlh)->nlmsg_len - NLMSG_SPACE((len)))
+*/
